@@ -1,8 +1,6 @@
 import evasdk
-from math import radians
+from .robot_config import *
 
-ip = '192.168.1.242'
-token = '088de40da79d48183c5fc804cc97a1f4f130940b'
 
 robot = evasdk.Eva(ip, token)
 
@@ -20,10 +18,12 @@ current_servo = robot.data_servo_positions()
 current_ik = robot.calc_forward_kinematics(current_servo)
 
 print("Current servo angle position: {}".format(current_servo))
-# Current servo angle position: [0.0018216577591374516, 0.32578912377357483, -1.894140601158142, 0.002109288005158305, -1.5700773000717163, 0.003739192383363843]
+# Current servo angle position: [0.0018216577591374516, 0.32578912377357483, -1.894140601158142,
+# 0.002109288005158305, -1.5700773000717163, 0.003739192383363843]
 
 print("Current FK position: {}".format(current_ik))
-# Current FK position: {'position': {'x': 0.34617966, 'y': 0.0008507436, 'z': 0.42513335}, 'orientation': {'w': 0.0015789923, 'x': 0.00095785555, 'y': 0.99999774, 'z': 0.0010590815}}
+# Current FK position: {'position': {'x': 0.34617966, 'y': 0.0008507436, 'z': 0.42513335}, 'orientation': {'w':
+# 0.0015789923, 'x': 0.00095785555, 'y': 0.99999774, 'z': 0.0010590815}}
 
 # The position coordinates are in METERS away from the robot
 # The orientation values are QUATERNION
@@ -41,14 +41,16 @@ calculated_future_position_1cm_Z = robot.calc_inverse_kinematics(guess_position,
                                                            future_position_1cm_X['orientation'])
 
 print(calculated_future_position)
-# {'ik': {'joints': [-3.436133e-08, 0.58707345, -2.4997797, -7.8321634e-08, -1.2288864, -5.9216084e-08], 'result': 'success'}}
+# {'ik': {'joints': [-3.436133e-08, 0.58707345, -2.4997797, -7.8321634e-08, -1.2288864, -5.9216084e-08],
+# 'result': 'success'}}
 
 print("Future FK position calc: {}".format(calculated_future_position['ik']['result']))
 # Future FK position calc: success
 # An unsuccessful IK calculation will return 'ik' in the result location
 
 print("Future FK position: {}".format(calculated_future_position))
-# Future FK position: {'ik': {'joints': [-3.436133e-08, 0.58707345, -2.4997797, -7.8321634e-08, -1.2288864, -5.9216084e-08], 'result': 'success'}}
+# Future FK position: {'ik': {'joints': [-3.436133e-08, 0.58707345, -2.4997797, -7.8321634e-08, -1.2288864,
+# -5.9216084e-08], 'result': 'success'}}
 
 if calculated_future_position['ik']['result'] == 'success':
     with robot.lock():

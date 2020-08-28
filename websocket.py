@@ -38,22 +38,26 @@ async def eva_ws_example(host_ip, session_token):
     msg_count = 0
     time_since_msg = time.time()
     while True:
+        websocket_running_time = time.time()
         try:
             ws_msg_json = await websocket.recv()
-            #print('WS msg delta T: {}, number: {}'.format(time.time() - time_since_msg, msg_count))
+            # print('WS msg delta T: {}, number: {}'.format(time.time() - time_since_msg, msg_count))
             msg_count += 1
             time_since_msg = time.time()
 
             ws_msg = json.loads(ws_msg_json)
-            #print(ws_msg['changes']['servos.telemetry.position'])
-            websocket_running_time = time.time()
-            if (websocket_running_time - websocket_start_time) / 60 >= 30:
+            # print(ws_msg['changes']['servos.telemetry.position'])
+            timer = (websocket_running_time - websocket_start_time) / 60
+            if round(timer, 4) % 2 == 0:
+                print("Timer currently: {}".format(round(timer, 4)))
+                print(ws_msg)
+            elif timer >= 30:
                 print("Restarted at {}".format(time.time()))
                 websocket = await evasdk.ws_connect(host_ip, session_token)
-                websocket_start_time = time.time()
-                websocket_running_time = 0
+                websocket_start_time = websocket_start_time + 1800
         except:
             print("Websocket unexpectedly closed at {}".format(time.time()))
             break
+
 
 asyncio.get_event_loop().run_until_complete(eva_ws_example(host_ip, session_token))
