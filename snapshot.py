@@ -1,10 +1,8 @@
 import evasdk
+from .robot_config import *
 
 # Very simple script to grab a status snapshot from Eva
 # The lock() is not required for grabbing snapshots
-
-token = ''
-ip = ''
 
 robot = evasdk.Eva(ip, token)
 

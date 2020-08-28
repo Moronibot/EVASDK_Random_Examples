@@ -2,17 +2,15 @@ import evasdk
 import json
 import asyncio
 import time
+from .robot_config import *
 
 # This example shows usage of the eva_ws and eva_http modules, used for direct control
 # using the network interfaces. eva_http also contains some helper functions not
 # contained in the public API, such as lock_wait_for.
 
-host_ip = '192.168.1.242'
-token = '088de40da79d48183c5fc804cc97a1f4f130940b'
+print('ip: [{}], token: [{}]\n'.format(ip, token))
 
-print('ip: [{}], token: [{}]\n'.format(host_ip, token))
-
-http_client = evasdk.EvaHTTPClient(host_ip, token)
+http_client = evasdk.EvaHTTPClient(ip, token)
 
 # The session token will be valid for 30 minutes, you'll need to renew the session
 # if you want the websocket connection to continue after that point.
