@@ -1,6 +1,7 @@
 import evasdk
-from .robot_config import *
 
+ip = '192.168.1.242'
+token = '088de40da79d48183c5fc804cc97a1f4f130940b'
 
 robot = evasdk.Eva(ip, token)
 
@@ -31,14 +32,14 @@ print("Current FK position: {}".format(current_ik))
 future_position = {'position': {'x': 0.3, 'y': 0, 'z': 0.3},
                    'orientation': {'w': 0, 'x': 0, 'y': 1, 'z': 0}}
 
-future_position_1cm_X = {'position': {'x': 0.31, 'y': 0, 'z': 0.3},
+future_position_1cm_X = {'position': {'x': 0.3, 'y': 0, 'z': 0.28},
                          'orientation': {'w': 0, 'x': 0, 'y': 1, 'z': 0}}
 
 calculated_future_position = robot.calc_inverse_kinematics(guess_position, future_position['position'],
                                                            future_position['orientation'])
 
 calculated_future_position_1cm_Z = robot.calc_inverse_kinematics(guess_position, future_position_1cm_X['position'],
-                                                           future_position_1cm_X['orientation'])
+                                                                 future_position_1cm_X['orientation'])
 
 print(calculated_future_position)
 # {'ik': {'joints': [-3.436133e-08, 0.58707345, -2.4997797, -7.8321634e-08, -1.2288864, -5.9216084e-08],
@@ -54,9 +55,10 @@ print("Future FK position: {}".format(calculated_future_position))
 
 if calculated_future_position['ik']['result'] == 'success':
     with robot.lock():
-        print("Moving...")
-        robot.control_go_to(calculated_future_position['ik']['joints'])
-        print("Moving 1cm forward...")
-        robot.control_go_to(calculated_future_position_1cm_Z['ik']['joints'])
+        for x in range(0,5):
+            print("Moving...")
+            robot.control_go_to(calculated_future_position['ik']['joints'])
+            print("Moving 1cm downward...")
+            robot.control_go_to(calculated_future_position_1cm_Z['ik']['joints'])
 if calculated_future_position['ik']['result'] == 'ik':
     print("Can't move there!")
