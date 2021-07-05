@@ -8,6 +8,13 @@ from evasdk import Eva
 from evasdk.eva_errors import eva_error
 
 
+def acknowledge_collision():
+    """ When a collision happens you need to acknowledge it first """
+    r = robot.api_call_with_auth('POST', 'controls/acknowledge_collision')
+    if r.status_code != 204:
+        eva_error('acknowledge_collision error', r)
+
+
 def collision_detection(on_off, setting):
     """ Temporary SDK option until the official SDK is updated """
     if setting not in ['low', 'medium', 'high']:
@@ -16,7 +23,7 @@ def collision_detection(on_off, setting):
         eva_error('collision_detection error, must be True/False')
     r = robot.api_call_with_auth('POST', 'controls/collision_detection',
                                  json.dumps({'enabled': on_off, 'sensitivity': setting}))
-    if r.status_code != 200:
+    if r.status_code != 204:
         eva_error('collision_detection error', r)
 
 
@@ -26,3 +33,4 @@ if __name__ == '__main__':
     robot = Eva(IP, TOKEN)
     with robot.lock():
         collision_detection(True, 'medium')
+        acknowledge_collision()
