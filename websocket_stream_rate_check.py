@@ -12,14 +12,6 @@ import json
 import csv
 
 
-class LiveDataGrapher:
-    def __init__(self, file):
-        self.file = open(file, mode='r')
-
-    def graph_it(self):
-        pass
-
-
 class WebSocketStreamer:
     def __init__(self, ip, token, run_duration=20):
         self.IP = ip
@@ -29,6 +21,10 @@ class WebSocketStreamer:
         self.results_list = []
         self.RUNNING = True
 
+    def get_ws_token(self):
+        http_client = EvaHTTPClient(self.IP, self.TOKEN)
+        return http_client.auth_create_session()
+
     def write_to_log(self):
         with open("stream_log.csv", mode='w', newline='') as f:
             for entries in self.results_list:
@@ -36,7 +32,7 @@ class WebSocketStreamer:
         f.close()
 
     async def websocket_stream(self):
-        stream = await ws_connect(self.IP, self.TOKEN)
+        stream = await ws_connect(self.IP, self.get_ws_token())
         start_time = time.time()
         while self.RUNNING:
             ws_msg_json = await stream.recv()
@@ -55,9 +51,8 @@ class WebSocketStreamer:
 
 
 if __name__ == '__main__':
-    IP = '10.10.60.175'
-    TOKEN = '4182f0358d31b004953305474dab53d8e5e764a2'
+    IP = '172.16.16.2'
+    TOKEN = '4d13eebd50b8fefb8517ffdda52bae8c736b6ab7'
 
-    #graph_it = LiveDataGrapher("stream_log.txt")
     ws_benchmark = WebSocketStreamer(IP, TOKEN, 0.1)
     ws_benchmark.run()
