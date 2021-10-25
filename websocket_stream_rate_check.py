@@ -5,15 +5,13 @@ Using this to verify potential connectivity issues.
 """
 
 from evasdk import *
+from websockets import client
 import time
 import asyncio
-import matplotlib.pyplot
-import json
-import csv
 
 
 class WebSocketStreamer:
-    def __init__(self, ip, token, run_duration=20):
+    def __init__(self, ip, token, run_duration):
         self.IP = ip
         self.TOKEN = token
         self.RUN_DURATION = 60 * run_duration  # Mins
@@ -51,8 +49,8 @@ class WebSocketStreamer:
 
 
 if __name__ == '__main__':
-    IP = '172.16.16.2'
-    TOKEN = '4d13eebd50b8fefb8517ffdda52bae8c736b6ab7'
+    IP = ''
+    TOKEN = ''
 
     ws_benchmark = WebSocketStreamer(IP, TOKEN, 0.1)
     ws_benchmark.run()
